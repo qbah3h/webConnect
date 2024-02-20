@@ -1,3 +1,5 @@
+// The base of this implementation was taken from the video:
+// https://www.youtube.com/watch?v=C0pXaNchNTA&t=3101s
 const {crawlPage} = require("./crawl.js");
 function main() {
     // const seed_url = "http://www.linkedin.com/in/andres-molina-28044b183/";
