@@ -38,7 +38,28 @@ function getUrlsFromHtml(html_body, base_url) {
     return urls;
 }
 
+async function crawlPage(page_to_crawl){
+    console.log(`actively crawling ${page_to_crawl}`);
+    try {
+        const resp = await fetch(page_to_crawl);
+        if(resp.status > 399) {
+            console.log(`Error in fetch wit status code: ${resp.status}, on page ${page_to_crawl}`);
+            return;
+        }
+        const content_type = resp.headers.get("content-type");
+        if(!content_type.includes("text/html")) {
+            console.log(`No html response, content type: ${content_type}, on page ${page_to_crawl}`);
+            return;
+        }
+        console.log(await resp.text());
+    } catch (error) {
+        console.log(`Error when fetching url: ${error.message}, on page ${page_to_crawl}`);
+    }
+    
+}
+
 module.exports = {
     normalizeUrl,
-    getUrlsFromHtml
+    getUrlsFromHtml,
+    crawlPage
 }

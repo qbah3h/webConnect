@@ -4,7 +4,7 @@
   "description": "Connection between the website and the system",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js",
+    "start": "node --no-warnings main.js",
     "test": "jest"
   },
   "author": "h3h",
