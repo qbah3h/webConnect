@@ -31,7 +31,13 @@ document.getElementById('htmlForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent default form submission
 
     var url = document.getElementById('urlInput').value;
-    fetch(url)
+    fetch("/loadWebsite", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+    })
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
