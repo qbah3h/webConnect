@@ -2,12 +2,16 @@
 // const { getUrlsFromHtml } = require("./crawl.js");
 const {JSDOM} = require("jsdom");
 
+const metadata = [
+    { product_name: { start: '<h1 class="ui-pdp-title">', end: '</h1>' } },
+    { description: { start: '<p class="ui-pdp-description__content">', end: '</p>' } },
+    { rating: { start: '<span aria-hidden="true" class="ui-pdp-review__rating">', end: '</span>' } },
+    { price: { start: '<meta itemProp="price" content="', end: '"' } },
+    { seller: { name_start: 'class="ui-pdp-action-modal__link"><span class="ui-pdp-color--BLUE ui-pdp-family--REGULAR">', name_end: '</span>', url_start: 'href="', url_end: '"' } },
+    { categories: { start: '<a class="andes-breadcrumb__link" href=".*?" title=".*?">', end: '</a>' } },
+    { images: { start: '<img[^>]+data-zoom="([^"]+)"[^>]*>', end: '' } }
+];
 function extractInformation(html) {
-    // const responseCleaned = extractNonTechnicalText(response);
-    // console.log("size responseCleaned" + responseCleaned.length);
-
-    // const meta_content = extractMetaContent(response);
-    // console.log("size meta_content" + meta_content.length);
 
     const body_only = extractBody(html);
     console.log("body_only size" + body_only.length);
@@ -20,7 +24,7 @@ function extractInformation(html) {
     const product_name = extractProductName(body_only);
     const rating = extractRating(body_only);
     const related_urls = getUrlsFromHtml(body_only);
-    const metadata = {
+    const final_object = {
         product_name,
         description,
         rating,
@@ -30,9 +34,9 @@ function extractInformation(html) {
         images,
         related_urls
     }
-    console.log(`metadata: ${JSON.stringify(related_urls)}`);
+    // console.log(`metadata: ${JSON.stringify(related_urls)}`);
 
-    return metadata;
+    return final_object;
 }
 
 function getUrlsFromHtml(html_body, base_url) {
@@ -194,55 +198,6 @@ function extractBody(html) {
     }
 }
 
-function extractUrls(sourceCode) {
-    // Regular expression to match URLs
-    var urlRegex = /(https?:\/\/[^\s]+)/g;
-    // Array to store extracted URLs
-    var urls = [];
-    
-    // Find all matches of URLs in the source code
-    var matches = sourceCode.match(urlRegex);
-    
-    // If matches found, push them to the urls array after trimming
-    if (matches) {
-        matches.forEach(function(url) {
-            urls.push(url.trim());
-        });
-    }
-    
-    // Sort the urls alphabetically
-    urls.sort();
-    
-    return urls;
-}
-
-// function extractAndSortUrls(sourceCode) {
-//     // Regular expression to find URLs
-//     const urlRegex = /(https?:\/\/[^\s]+)/g;
-    
-//     // Extract URLs from source code
-//     const urls = sourceCode.match(urlRegex) || [];
-    
-//     // Sort URLs alphabetically
-//     urls.sort((a, b) => a.localeCompare(b));
-    
-//     return urls;
-// }
-
-
 module.exports = {
     extractInformation
 }
-
-// The base of this implementation was taken from the video:
-// https://www.youtube.com/watch?v=C0pXaNchNTA&t=3101s
-// const { crawlPage } = require("./crawl.js");
-// function main() {
-//     // const seed_url = "http://www.linkedin.com/in/andres-molina-28044b183/";
-//     // const seed_url = "http://www.cubadebate.cu/especiales/2024/02/20/errantes-en-su-propia-tierra-miradas-al-fenomeno-de-los-deambulantes-en-cuba-i-video-podcast-e-infografia/";
-
-//     console.log("starting crawl...");
-//     crawlPage(seed_url);
-// }
-
-// main();
